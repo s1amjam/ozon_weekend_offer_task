@@ -15,12 +15,25 @@ func TestAdd(t *testing.T) {
 }
 
 func TestGenerate(t *testing.T) {
-	td := &testData{}
-	n := 100
-	generate(n, td)
+	var tests = []struct {
+		name   string
+		input  int
+		expect int
+	}{
+		{"Input 100", 100, 100},
+		{"Input 0", 0, 0},
+		{"Input -100", -100, 0},
+	}
 
-	if len(td.phones) != n {
-		t.Errorf("Expected %d phone numbers, but got %d", n, len(td.phones))
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			td := &testData{}
+			generate(tt.input, td)
+
+			if len(td.phones) != tt.expect {
+				t.Errorf("Expected %d phone numbers, but got %d", tt.expect, len(td.phones))
+			}
+		})
 	}
 }
 
@@ -33,25 +46,5 @@ func TestPhoneFormat(t *testing.T) {
 		if phone < 89000000000 || phone > 89999999999 {
 			t.Errorf("Wrong phone format: %d", phone)
 		}
-	}
-}
-
-func TestGenerateWithZero(t *testing.T) {
-	td := &testData{}
-	n := 0
-	generate(n, td)
-
-	if len(td.phones) != 0 {
-		t.Errorf("Expected 0 but got %d", len(td.phones))
-	}
-}
-
-func TestGenerateWithNegativeNumber(t *testing.T) {
-	td := &testData{}
-	n := -100
-	generate(n, td)
-
-	if len(td.phones) != 0 {
-		t.Errorf("Expected 0 while trying to generate with negative number, but got %d", len(td.phones))
 	}
 }
